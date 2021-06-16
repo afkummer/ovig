@@ -13,6 +13,9 @@ namespace Builder{
 			res = PDPTW::build(con, locations, matrix, inst);
 		else if(con.type == InstanceType::CVRP)
 			res = CVRP::build(con, locations, matrix, inst);
+		else if(con.type == InstanceType::HHCP)
+			res = HHCP::build(con, locations, matrix, inst);
+		
 		
 		return res;
 	}

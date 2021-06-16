@@ -21,7 +21,7 @@ enum class GenType{Rectangle, Circle};
 enum class FileCode{ReadError, ReadOk, WriteError, WriteOk};
 enum class NodeDistribution{Cluster, Random, ClusterRandom, Unknown};
 enum class DepotType{Central, Random};
-enum class InstanceType{PDPTW, CVRP, VRPTW, PDP, Unknown}; // TODO: add more types as CVRP, VRPTW, ...
+enum class InstanceType{PDPTW, CVRP, VRPTW, PDP, HHCP, Unknown}; // TODO: add more types as CVRP, VRPTW, ... (Leonardo: Add HHCP)
 enum class TimeHorizon{Short, Medium, Long};
 
 const static std::string DEFAULT_CONFIG_FILE = "configuration.txt";
@@ -40,6 +40,8 @@ inline std::string type_to_string(InstanceType type){
 	else if(type == InstanceType::CVRP) return Constants::STR_TYPE_CVRP;
 	else if(type == InstanceType::VRPTW) return Constants::STR_TYPE_VRPTW;
 	else if(type == InstanceType::PDP) return Constants::STR_TYPE_PDP;
+	// (Leonardo: Add else if(type == InstanceType::HHCP) return Constants::STR_TYPE_HHCP;)
+	else if(type == InstanceType::HHCP) return Constants::STR_TYPE_HHCP;
 	
 	return std::string("Unknown");
 }
@@ -65,7 +67,8 @@ inline InstanceType string_to_type1(std::string str){
 	else if(str == Constants::STR_TYPE_CVRP) return InstanceType::CVRP;
 	else if(str == Constants::STR_TYPE_PDP) return InstanceType::PDP;
 	else if(str == Constants::STR_TYPE_VRPTW) return InstanceType::VRPTW;
-
+	// (Leonardo: Add else if(str == Constants::STR_TYPE_HHCP) return InstanceType::HHCP;)
+	else if(str == Constants::STR_TYPE_HHCP) return InstanceType::HHCP;
 	return InstanceType::Unknown;
 }
 

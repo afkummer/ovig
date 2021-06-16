@@ -7,11 +7,11 @@
 ## case the triangle inequality will hold.
 
 ## first extract the data from OSM file using the profile for cars
-osrm-extract -p profiles/car.lua berlin-data2/berlin-latest.osm.pbf
+../../osrm-backend/build/osrm-extract -p ../../osrm-backend/profiles/car.lua spain-latest.osm.pbf
 
 ## partition and customize (whatever this means)
-osrm-partition berlin-data2/berlin-latest.osrm
-osrm-customize berlin-data2/berlin-latest.osrm
+../../osrm-backend/build/osrm-partition spain-latest.osrm
+../../osrm-backend/build/osrm-customize spain-latest.osrm
 
 ## execute the routing algorithm MLD
-osrm-routed --algorithm mld berlin-data2/berlin-latest.osrm
+##../../osrm-backend/build/osrm-routed --algorithm mld spain-latest.osrm

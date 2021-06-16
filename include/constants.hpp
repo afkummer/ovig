@@ -19,6 +19,8 @@ namespace Constants{
 	const std::string STR_TYPE_PDP = "PDP";
 	const std::string STR_TYPE_VRPTW = "VRPTW";
 	const std::string STR_TYPE_CVRP = "CVRP";
+	// (Leonardo: Add const for hhcp)
+	const std::string STR_TYPE_HHCP = "HHCP";
 
 	const std::string STR_DEPOT_CENTRAL = "central";
 	const std::string STR_DEPOT_RANDOM = "random";

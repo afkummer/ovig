@@ -25,6 +25,14 @@ namespace Builder{
 		//for now, there is only one build method for the CVRP
 		int build(const Configurations& con, const std::vector<GeoLocation>& locations, std::vector< std::vector< double > >& matrix, Instance& inst);
 	};
+
+	// Leonardo: namespace for HHCP
+	namespace HHCP{
+		// for now, let's just use the builder from CVRP and make alterations later
+		// If we create another build, we need to put it's declaration above with the other builds
+		int build(const Configurations& con, const std::vector<GeoLocation>& locations, std::vector< std::vector< double > >& matrix, Instance& inst);
+	};
+
 }
 
 #endif //__H_BUILDER_H__

@@ -10,8 +10,10 @@
 using namespace std;
 
 void write_edge_matrix(const std::vector< std::vector<double> >& matrix, ofstream& file);
+void write_edge_matrix_new(const std::vector< std::vector<double> >& matrix, ofstream& file);
 void write_pdptw_instance(const Instance& inst, ofstream& file);
 void write_cvrp_instance(const Instance& inst, ofstream& file);
+void write_hhcp_instance(const Instance& inst, ofstream& file);
 
 // convert double value to string according to precision
 static std::string dtos(double value, unsigned int precision=2){
@@ -26,8 +28,22 @@ FileCode Instance::write_instance_file(const std::string& filename, const Instan
 
 	if(inst.type == InstanceType::PDPTW) write_pdptw_instance(inst, file);
 	else if(inst.type == InstanceType::CVRP) write_cvrp_instance(inst, file);
+	// Leonardo: Let's add the function for HHCP.
+	else if(inst.type == InstanceType::HHCP) write_hhcp_instance(inst, file);
 	
 	return FileCode::WriteOk;
+}
+
+void write_hhcp_instance(const Instance& inst, ofstream& file){
+	/* For now, let just write the nodes and the distance matrix */
+	for(size_t i=0;i<inst.nodes.size();i++){
+		file << i << ": ";
+		file << dtos(inst.nodes[i].loc.lat, 8) << " " << dtos(inst.nodes[i].loc.lon,8) << endl;
+	}
+
+	write_edge_matrix_new(inst.matrix, file);
+	
+	file << "EOF";
 }
 
 void write_pdptw_instance(const Instance& inst, ofstream& file){		
@@ -95,5 +111,14 @@ void write_edge_matrix(const std::vector< std::vector<double> >& matrix, ofstrea
 			if(j != matrix.size()-1) file << " ";
 		}
 		file << endl;
+	}
+}
+
+void write_edge_matrix_new(const std::vector< std::vector<double> >& matrix, ofstream& file){
+	file << "DISTANCES" << endl;
+	for(size_t i=0;i<matrix.size();i++){
+		for(size_t j=0;j<matrix.size();j++){
+			file << i << " to " << j << ": " << static_cast<size_t>(matrix[i][j]) << endl;
+		}
 	}
 }

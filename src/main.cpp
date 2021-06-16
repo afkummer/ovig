@@ -24,7 +24,7 @@ void read_parameters(int argc, char** argv, Configurations& con);
 int main(int argc, char** argv){
 	Configurations con;
 	read_parameters(argc, argv, con);
-	//printf("Seed: %ld\n", con.seed);
+	printf("Seed: %ld\n", con.seed);
 	rng = std::mt19937_64(con.seed);
 
 	Instance inst;
