@@ -57,13 +57,13 @@ namespace InstanceCreator{
 			for(GeoLocation loc : locations) printf("%f , %f\n", loc.lat, loc.lon);
 		}
 		//exit(1);
-		
+
 		if(con.verbose >= 2) printf("Routing time matrix...\n");
 		//TODO: change this name to 'times'
 		std::vector< std::vector<double> > distances(locations.size(), std::vector<double>(locations.size(), 0));
 		Router router(con.osrm_file);
 		router.route(locations, distances);
-		
+
 		if(con.verbose >= 2){
 			if(con.verbose >= 3){
 				printf("Matrix triangular: %s\n", holds_triangular(distances) == 0 ? "true" : "false");
@@ -72,7 +72,7 @@ namespace InstanceCreator{
 			}
 			printf("DONE: Time matrix routed.\n");
 		}
-		
+
 		if(con.verbose >= 4){
 			std::cout << "FULL TIME MATRIX: " << std::endl;
 			for(size_t i=0;i<locations.size();i++){
@@ -100,7 +100,7 @@ namespace InstanceCreator{
 		inst.nclusters = con.nclusters;
 		inst.density = con.density;
 		inst.time_window = con.time_window;
-		
+
 		if(con.verbose >= 2 and ret == EXIT_SUCCESS) printf("DONE: instance built.\n");
 		else if(con.verbose >= 2) printf("WARNING: some errors ocurred building the instance.\n");
 		return ret;
@@ -120,7 +120,7 @@ int holds_triangular(const std::vector< std::vector<double> >& mat){
 			}
 		}
 	}
-	
+
 	return nerr;
 }
 
@@ -133,6 +133,6 @@ int is_assymmetric(const std::vector< std::vector<double> >& mat){
 			}
 		}
 	}
-	
+
 	return nerr;
 }

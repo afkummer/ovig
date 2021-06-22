@@ -3,6 +3,8 @@
 
 #include "common.hpp"
 #include "node.hpp"
+#include "hhcrsp/WeeklyData.hpp"
+#include <memory>
 #include <vector>
 
 /*
@@ -28,8 +30,10 @@ public:
 	std::vector<Node> nodes; // nodes (locations) in the input graph
 	std::vector< std::vector< double > > matrix; // matrix of times/costs
 
+   std::unique_ptr <WeeklyData> hhcp_data;
+
 	static FileCode write_instance_file(const std::string& filename, const Instance& inst);
-	
+
 };
 
 

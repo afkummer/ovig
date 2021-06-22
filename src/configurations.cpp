@@ -4,7 +4,9 @@
 #include <fstream>
 
 typedef struct {
-	bool name=false, type=false, size=false, dist=false, clusters=false, density=false, route_time=false, capacity=false, depot=false, time_window=false, service=false, osrm=false, land=false, limits=false, nodes=false;
+	bool name=false, type=false, size=false, dist=false, clusters=false, density=false, route_time=false, capacity=false, depot=false, time_window=false, service=false, osrm=false, land=false, limits=false, nodes=false,
+
+   caregivers=false, skills=false, days=false, patients_override=false, max_carer_skills=false, min_patients_per_unit_skill=false, max_patients_per_unit_skill=false, day_start=false, day_end=false, min_svc_time=false, max_svc_time=false, ds_simult=false, ds_prec=false, min_delta=false, max_delta=false, ds_dyntw=false, ndaily=false;
 }checker_t;
 
 bool has_everything(const checker_t& ch, const Configurations& con);
@@ -31,7 +33,7 @@ size_t count_words(const std::string text){
 			in_spaces = false;
 		}
 	}
-	return count+1;	
+	return count+1;
 }
 
 //Reads the node file containing either locations or full nodes of the problem
@@ -43,7 +45,7 @@ FileCode read_node_file(struct Configurations& con, std::istream& f){
 	bool found_eof = false;
 	if(con.verbose >= 2)
 		printf("Reading header of %s...\n", Constants::STR_CON_NODE_FILE.c_str());
-	
+
 	//ignore comments at the beggining
 	while(not f.eof() and not found_nodes_tag){
 		keyword = read_keyword(f);
@@ -62,12 +64,12 @@ FileCode read_node_file(struct Configurations& con, std::istream& f){
 	}
 	if(con.verbose >= 2)
 		printf("Reading nodes from file...\n");
-	
+
 	if(not found_nodes_tag || f.eof() || found_eof){
 		printf("Missing tag %s in %s\n", Constants::STR_NDF_NODES.c_str(), Constants::STR_CON_NODE_FILE.c_str());
 		return FileCode::ReadError;
 	}
-	
+
 	std::streampos old_pos = f.tellg(); //get current position
 	getline(f,cline); //remove the \n
 	getline(f,cline); //get line of node
@@ -78,7 +80,7 @@ FileCode read_node_file(struct Configurations& con, std::istream& f){
 		printf("Nodes should be define either with only < id lat lon >, or with < id lat lon dem tw_center pick dev >");
 		return FileCode::ReadError;
 	}
-	
+
 	con.full_nodes = words > 3 ? Constants::NUM_NDF_FULL : Constants::NUM_NDF_LOCS;
 	int id=0;
 	while(not f.eof()){
@@ -92,7 +94,7 @@ FileCode read_node_file(struct Configurations& con, std::istream& f){
 			getline(f,cline);
 			continue;
 		}
-		
+
 		int q=0, tw_center=0, pick=0, dev=0;
 		double lat=0, lon=0;
 		f >> lat >> lon;
@@ -107,7 +109,7 @@ FileCode read_node_file(struct Configurations& con, std::istream& f){
 			pick = id-1;
 			type = NodeType::Delivery;
 		}
-		
+
 		GeoLocation loc = {lat,lon};
 		Node n(id, loc, q, tw_center, tw_center, 0, pick, type);
 		con.nodes.push_back(n);
@@ -119,7 +121,7 @@ FileCode read_node_file(struct Configurations& con, std::istream& f){
 		printf("Missing tag %s in %s\n", Constants::STR_EOF.c_str(), Constants::STR_CON_NODE_FILE.c_str());
 		return FileCode::ReadError;
 	}
-	
+
 	return FileCode::ReadOk;
 }
 
@@ -164,7 +166,7 @@ FileCode read_limits(struct Configurations& con, std::istream& f){
 FileCode read_depot(struct Configurations& con, std::istream& f){
 	std::string dummy;
 	FileCode result = FileCode::ReadOk;
-	
+
 	f >> dummy;
 	if(dummy == Constants::STR_DEPOT_CENTRAL)
 		con.depot_type = DepotType::Central;
@@ -181,7 +183,7 @@ FileCode read_depot(struct Configurations& con, std::istream& f){
 FileCode read_type(struct Configurations& con, std::istream& f){
 	std::string dummy;
 	FileCode result = FileCode::ReadOk;
-	
+
 	f >> dummy;
 	con.type = string_to_type1(dummy);
 	if(con.type != InstanceType::PDPTW and con.type != InstanceType::CVRP and con.type != InstanceType::HHCP){
@@ -191,7 +193,6 @@ FileCode read_type(struct Configurations& con, std::istream& f){
 
 	return result;
 }
-
 
 //read the specification area of the input stream
 //check if required fields have been given
@@ -222,7 +223,7 @@ FileCode Configurations::read_configurations(struct Configurations& con, std::is
 		}
 		if(con.verbose >= 2)
 			printf("Reading %s\n", keyword.c_str());
-		
+
 		if(keyword == Constants::STR_CON_NAME){
 			f >> con.iname; ch.name = true;
 		}else if(keyword == Constants::STR_CON_TYPE){
@@ -252,7 +253,7 @@ FileCode Configurations::read_configurations(struct Configurations& con, std::is
 		}else if(keyword == Constants::STR_CON_LAND_FILE){
 			f >> con.land_file; ch.land = true;
 		}else if(keyword == Constants::STR_CON_LOCATION){
-			f >> con.locname; 
+			f >> con.locname;
 		}else if(keyword == Constants::STR_CON_ROUTE_TIME){
 			f >> con.max_route_time; ch.route_time = true;
 		}else if(keyword == Constants::STR_CON_NODE_FILE){
@@ -267,17 +268,54 @@ FileCode Configurations::read_configurations(struct Configurations& con, std::is
 			}
 		}else if(keyword == Constants::STR_CON_LIMITS){
 			result = read_limits(con, f); ch.limits = true;
-		}else {
+		}else if(keyword == Constants::STR_CON_CAREGIVERS) {
+         f >> con.ncaregivers; ch.caregivers = true;
+      }
+      else if(keyword == Constants::STR_CON_SKILLS) {
+         f >> con.nskills; ch.skills = true;
+      }else if(keyword == Constants::STR_CON_DAYS) {
+         f >> con.ndays; ch.days = true;
+      }else if(keyword == Constants::STR_CON_PATIENTS_OVERRIDE) {
+         f >> con.patients_override; ch.patients_override = true;
+      }else if(keyword == Constants::STR_CON_MAX_SKILLS_PER_CAREGIVER) {
+         f >> con.max_carer_skills; ch.max_carer_skills = true;
+      }else if(keyword == Constants::STR_CON_MIN_PATIENTS_PER_UNIT_SKILL) {
+         f >> std::get<0>(con.patients_per_skill_unit); ch.min_patients_per_unit_skill = true;
+      }else if(keyword == Constants::STR_CON_MAX_PATIENTS_PER_UNIT_SKILL) {
+         f >> std::get<1>(con.patients_per_skill_unit);
+         ch.max_patients_per_unit_skill = true;
+      }else if(keyword == Constants::STR_CON_DAY_STARTING_MINUTES) {
+         f >> std::get<0>(con.day_horizon); ch.day_start = true;
+      }else if(keyword == Constants::STR_CON_DAY_ENDING_MINUTES) {
+         f >> std::get<1>(con.day_horizon); ch.day_end = true;
+      }else if(keyword == Constants::STR_CON_SERV_TIME_MIN) {
+         f >> std::get<0>(con.service_times_hhcp); ch.min_svc_time = true;
+      }else if(keyword == Constants::STR_CON_SERV_TIME_MAX) {
+         f >> std::get<1>(con.service_times_hhcp); ch.max_svc_time = true;
+      }else if(keyword == Constants::STR_CON_DS_SIMULT) {
+         f >> con.ds_simult_perc; ch.ds_simult = true;
+      }else if(keyword == Constants::STR_CON_DS_PREC) {
+         f >> con.ds_prec_perc; ch.ds_prec = true;
+      }else if(keyword == Constants::STR_CON_MIN_DELTA_SEP) {
+         f >> std::get<0>(con.delta_range); ch.min_delta = true;
+      }else if(keyword == Constants::STR_CON_MAX_DELTA_SEP) {
+         f >> std::get<1>(con.delta_range); ch.max_delta = true;
+      }else if(keyword == Constants::STR_CON_MIN_DYNTW_DURATION_MINUTES) {
+         f >> con.min_ds_dyntw_duration; ch.ds_dyntw = true;
+      } else if(keyword == Constants::STR_CON_PATIENTS_DAILY) {
+         f >> con.ndaily; ch.ndaily = true;
+      }
+      else {
 			printf("Unkown configuration tag \"%s\"\n", keyword.c_str());
 			result = FileCode::ReadError;
 		}
 		if(con.verbose >= 2)
 			printf("DONE: Reading %s\n", keyword.c_str());
-		
+
 	} while (result == FileCode::ReadOk);
 
 	if(result == FileCode::ReadOk) result = has_everything(ch, con) ? result : FileCode::ReadError;
-	
+
 	return result;
 }
 
@@ -327,7 +365,75 @@ bool has_everything(const checker_t& ch, const Configurations& con){
 	}else if(not ch.nodes and not ch.limits){
 		misst = Constants::STR_CON_LIMITS;
 		required = true;
-	}
+	}else if(not ch.caregivers) {
+      misst = Constants::STR_CON_CAREGIVERS;
+      required = true;
+   }
+
+   else if(not ch.skills) {
+      misst = Constants::STR_CON_SKILLS;
+      required = true;
+   }
+   else if(not ch.days) {
+      misst = Constants::STR_CON_DAYS;
+      required = true;
+   }
+   else if(not ch.patients_override) {
+      misst = Constants::STR_CON_PATIENTS_OVERRIDE;
+      required = true;
+   }
+   else if(not ch.max_carer_skills) {
+      misst = Constants::STR_CON_MAX_SKILLS_PER_CAREGIVER;
+      required = true;
+   }
+   else if(not ch.min_patients_per_unit_skill) {
+      misst = Constants::STR_CON_MIN_PATIENTS_PER_UNIT_SKILL;
+      required = true;
+   }
+   else if(not ch.max_patients_per_unit_skill) {
+      misst = Constants::STR_CON_MAX_PATIENTS_PER_UNIT_SKILL;
+      required = true;
+   }
+   else if(not ch.day_start) {
+      misst = Constants::STR_CON_DAY_STARTING_MINUTES;
+      required = true;
+   }
+   else if(not ch.day_end) {
+      misst = Constants::STR_CON_DAY_ENDING_MINUTES;
+      required = true;
+   }
+   else if(not ch.min_svc_time) {
+      misst = Constants::STR_CON_SERV_TIME_MIN;
+      required = true;
+   }
+   else if(not ch.max_svc_time) {
+      misst = Constants::STR_CON_SERV_TIME_MAX;
+      required = true;
+   }
+   else if(not ch.ds_simult) {
+      misst = Constants::STR_CON_DS_SIMULT;
+      required = true;
+   }
+   else if(not ch.ds_prec) {
+      misst = Constants::STR_CON_DS_PREC;
+      required = true;
+   }
+   else if(not ch.min_delta) {
+      misst = Constants::STR_CON_MIN_DELTA_SEP;
+      required = true;
+   }
+   else if(not ch.max_delta) {
+      misst = Constants::STR_CON_MAX_DELTA_SEP;
+      required = true;
+   }
+   else if(not ch.ds_dyntw) {
+      misst = Constants::STR_CON_MIN_DYNTW_DURATION_MINUTES;
+      required = true;
+   }
+   else if(not ch.ndaily) {
+      misst = Constants::STR_CON_PATIENTS_DAILY;
+      required = true;
+   }
 
 	if(misst.size() > 0){
 		if(required) printf("Missing ");

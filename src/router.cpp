@@ -31,7 +31,7 @@ Router::Router(string osrm_data) {
 }
 
 void Router::route(const std::vector<GeoLocation>& locations, std::vector< std::vector<double> >& matrix){
-	table_route(locations, matrix);	
+	table_route(locations, matrix);
 	triangular_inequality(matrix);
 }
 
@@ -55,11 +55,11 @@ void Router::table_route(const std::vector<GeoLocation> &locations, std::vector<
 
 	//make it return duration
 	params.annotations = osrm::TableParameters::AnnotationsType::Duration;
-	
+
 	osrm::engine::api::ResultT result;
 	const auto status = osrm->Table(params, result);
 	auto& rjson = result.get<osrm::json::Object>();
-	
+
 	if (status == osrm::Status::Ok){
 		auto &times = rjson.values["durations"].get<osrm::json::Array>();
 
@@ -67,7 +67,7 @@ void Router::table_route(const std::vector<GeoLocation> &locations, std::vector<
 			for(size_t j=0;j<locations.size();j++){
 				if(i == j) continue; //avoid getting any possible trash value (apparantly it happens)
 				auto &row = times.values.at(i).get<osrm::json::Array>();
-				
+
 				//transfor duration[i][j] from seconds to minutes (integer values)
 				matrix[i][j] = std::max(0.0, std::ceil(row.values.at(j).get<osrm::json::Number>().value/60.0));
 			}
@@ -75,7 +75,7 @@ void Router::table_route(const std::vector<GeoLocation> &locations, std::vector<
 	}else if (status == osrm::Status::Error){
 		//TODO: check what to do in case of error
 		const auto code = rjson.values["code"].get<osrm::json::String>().value;
-		const auto message = rjson.values["message"].get<osrm::json::String>().value;			
+		const auto message = rjson.values["message"].get<osrm::json::String>().value;
 		std::cout << "Code: " << code << "\n";
 		std::cout << "Message: " << code << "\n";
 		throw "Dead end error.\n";

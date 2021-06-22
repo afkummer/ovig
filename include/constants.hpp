@@ -7,9 +7,9 @@ namespace Constants{
 	const size_t NUM_NDF_NONE = 0;
 	const size_t NUM_NDF_LOCS = 1;
 	const size_t NUM_NDF_FULL = 2;
-	
+
 	const size_t NUM_HORIZON_SHORT = 120;
-	
+
 	const std::string STR_DIST_CLUSTER = "cluster";
 	const std::string STR_DIST_RANDOM = "random";
 	const std::string STR_DIST_CLUST_RAND = "cluster-random";
@@ -20,9 +20,9 @@ namespace Constants{
 	const std::string STR_TYPE_VRPTW = "VRPTW";
 	const std::string STR_TYPE_CVRP = "CVRP";
 	// (Leonardo: Add const for hhcp)
-	const std::string STR_TYPE_HHCP = "HHCP";
+   const std::string STR_TYPE_HHCP = "HHCP";
 
-	const std::string STR_DEPOT_CENTRAL = "central";
+   const std::string STR_DEPOT_CENTRAL = "central";
 	const std::string STR_DEPOT_RANDOM = "random";
 
 	const std::string STR_CON_NAME = "NAME";
@@ -47,7 +47,26 @@ namespace Constants{
 
 	const std::string STR_NDF_NODES = "NODES";
 
-	const std::string STR_EOF = "EOF";
+   // Constants regarding the HHCRSP.
+   const std::string STR_CON_CAREGIVERS = "CAREGIVERS";
+   const std::string STR_CON_SKILLS = "SKILLS";
+   const std::string STR_CON_DAYS = "DAYS";
+   const std::string STR_CON_PATIENTS_OVERRIDE = "PATIENTS-OVERRIDE";
+   const std::string STR_CON_MAX_SKILLS_PER_CAREGIVER = "MAX-CARER-SKILLS";
+   const std::string STR_CON_MIN_PATIENTS_PER_UNIT_SKILL = "MIN-PATIENTS-UNIT";
+   const std::string STR_CON_MAX_PATIENTS_PER_UNIT_SKILL = "MAX-PATIENTS-UNIT";
+   const std::string STR_CON_DAY_STARTING_MINUTES = "DAY-START";
+   const std::string STR_CON_DAY_ENDING_MINUTES = "DAY-END";
+   const std::string STR_CON_SERV_TIME_MIN = "MIN-SERVICE-TIME";
+   const std::string STR_CON_SERV_TIME_MAX = "MAX-SERVICE-TIME";
+   const std::string STR_CON_DS_SIMULT = "DS-SIMULT";
+   const std::string STR_CON_DS_PREC = "DS-PREC";
+   const std::string STR_CON_MIN_DELTA_SEP = "MIN-DELTA";
+   const std::string STR_CON_MAX_DELTA_SEP = "MAX-DELTA";
+   const std::string STR_CON_MIN_DYNTW_DURATION_MINUTES = "MIN-PREC-DYNTW";
+   const std::string STR_CON_PATIENTS_DAILY = "DAILY-PATIENTS";
+
+   const std::string STR_EOF = "EOF";
 	const char CHR_SEPARATOR = ':';
 	const char CHR_COMMENT = '#';
 };

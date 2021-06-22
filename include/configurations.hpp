@@ -2,6 +2,7 @@
 #define __H_CONFIGURATIONS_H__
 
 #include <string>
+#include <tuple>
 #include <vector>
 #include <iostream>
 #include "node.hpp"
@@ -34,9 +35,23 @@ struct Configurations{
 	std::string comment; // comment
 	int verbose; //verbose level
 	std::string inst_file; //output instance filename
-	size_t full_nodes; 
+	size_t full_nodes;
 	std::vector<Node> nodes; // nodes
-	
+
+   int ndaily;
+   int ncaregivers;
+   int nskills;
+   int ndays;
+   int patients_override;
+   int max_carer_skills;
+   std::tuple <int, int> patients_per_skill_unit;
+   std::tuple <int, int> day_horizon;
+   std::tuple <int, int> service_times_hhcp;
+   double ds_simult_perc;
+   double ds_prec_perc;
+   std::tuple <int, int> delta_range;
+   int min_ds_dyntw_duration;
+
 	//read the specification area of the input stream
     static FileCode read_configurations(struct Configurations& con, std::istream& f);
 };

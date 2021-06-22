@@ -2,7 +2,7 @@
 CXX = g++
 
 #compilation flags to be used
-CXXFLAGS = -Wall -O3 -std=c++14
+CXXFLAGS = -Wall -O3 -std=c++17 -ggdb3 -fno-omit-frame-pointer
 
 #location of files and libraries to be used
 OSRM_DIR = ../osrm-backend/
@@ -15,10 +15,10 @@ LIBS = -losrm -lm -lpthread -lrt -lboost_filesystem -lboost_iostreams -lboost_pr
 LIBDIR = -L$(OSRM_DIR)lib -L/usr/local/lib
 
 # define the C++ source files
-SMAIN = $(SRCDIR)main.cpp $(SRCDIR)distributer.cpp $(SRCDIR)router.cpp $(SRCDIR)instance_creator.cpp $(SRCDIR)configurations.cpp $(SRCDIR)geolocation.cpp $(SRCDIR)builder.cpp $(SRCDIR)pdptw_builder.cpp $(SRCDIR)cvrp_builder.cpp $(SRCDIR)hhcp_builder.cpp $(SRCDIR)instance.cpp
+SMAIN = $(SRCDIR)main.cpp $(SRCDIR)distributer.cpp $(SRCDIR)router.cpp $(SRCDIR)instance_creator.cpp $(SRCDIR)configurations.cpp $(SRCDIR)geolocation.cpp $(SRCDIR)builder.cpp $(SRCDIR)pdptw_builder.cpp $(SRCDIR)cvrp_builder.cpp $(SRCDIR)hhcp_builder.cpp $(SRCDIR)instance.cpp $(SRCDIR)/hhcrsp/WeeklyData.cpp
 OMAIN = $(SMAIN:.cpp=.o)
 
-# define the executable file 
+# define the executable file
 MAIN = main
 
 .PHONY: depend clean
@@ -29,12 +29,12 @@ all: $(MAIN)
 $(MAIN): $(OMAIN)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LIBDIR) -o $(MAIN) $(OMAIN) $(LIBS)
 
-.cpp.o: 
+.cpp.o:
 	$(CXX) $(CXXFLAGS) $(DDFS) $(INCLUDES) -c $<  -o $@
 
 clean:
 	$(RM) $(SRCDIR)*.o
-	$(RM) $(SRCDIR)*.bak 
+	$(RM) $(SRCDIR)*.bak
 
 depend: $(SMAIN)
 	makedepend $(INCLUDES) $^
