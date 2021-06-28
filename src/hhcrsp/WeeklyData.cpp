@@ -226,7 +226,8 @@ void WeeklyData::generateCaregivers() {
 
       for (int v = ci; v < cj; ++v) {
          // Chooses the number of skills to generate
-         const int ns = numSkillsDist(m_params.prng());
+         int count = accumulate(m_carerQualif[v].begin(), m_carerQualif[v].end(), 0);
+         const int ns = max(0, numSkillsDist(m_params.prng()) - count);
 
          // Generate the skills.
          for (int sc = 0; sc < ns; ++sc) {
@@ -242,9 +243,6 @@ void WeeklyData::generateCaregivers() {
       }
    };
 
-   genSkillsRange(m_skillPartitions[0], m_carerPartitions[0]);
-   genSkillsRange(m_skillPartitions[1], m_carerPartitions[1]);
-
    auto fillMissingSkills = [&](tuple <int,int> skillRange, tuple <int,int> cgRange) {
       auto [si, sj] = skillRange;
       assert(sj-si >= 1 && "Invalid range of skills.");
@@ -253,8 +251,8 @@ void WeeklyData::generateCaregivers() {
       assert(cj-ci >= 1 && "Invalid range of caregivers.");
 
       // Shuffles the skills set.
-      vector <int> skills(m_params.numSkills());
-      iota(skills.begin(), skills.end(), 0);
+      vector <int> skills(sj-si);
+      iota(skills.begin(), skills.end(), si);
       shuffle(skills.begin(), skills.end(), m_params.prng());
 
       uniform_int_distribution <int> caregiverDist(ci, cj-1);
@@ -264,7 +262,8 @@ void WeeklyData::generateCaregivers() {
             for (;;) {
                int v = caregiverDist(m_params.prng());
                int count = accumulate(m_carerQualif[v].begin(), m_carerQualif[v].end(), 0);
-               if (!caregiverHasSkill(v, s) && count < m_params.maxSkillsPerCaregiver()) {
+               if (!caregiverHasSkill(v, s) &&
+                   count < m_params.maxSkillsPerCaregiver()) {
                   setCaregiverSkill(v, s);
                   break;
                }
@@ -276,6 +275,9 @@ void WeeklyData::generateCaregivers() {
 
    fillMissingSkills(m_skillPartitions[0], m_carerPartitions[0]);
    fillMissingSkills(m_skillPartitions[1], m_carerPartitions[1]);
+
+   genSkillsRange(m_skillPartitions[0], m_carerPartitions[0]);
+   genSkillsRange(m_skillPartitions[1], m_carerPartitions[1]);
 }
 
 int WeeklyData::numCaregiversWithSkill(int skill) const {
@@ -406,7 +408,8 @@ void WeeklyData::generateDailyData(int day) {
          for (;;) {
             s = demandDist(m_params.prng());
             bool otherFirstHalf = s < get<1>(m_skillPartitions[0]);
-            if ((cachedFirstHalf && otherFirstHalf) == false)
+            if ((cachedFirstHalf == true && otherFirstHalf == false) ||
+                (cachedFirstHalf == false && otherFirstHalf == true))
                break;
          }
          assert(accumulate(m_demands[i][day].begin(), m_demands[i][day].end(), 0) == 1);
