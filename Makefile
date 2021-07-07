@@ -2,7 +2,7 @@
 CXX = g++
 
 #compilation flags to be used
-CXXFLAGS = -Wall -O3 -std=c++17 -ggdb3 -fno-omit-frame-pointer
+CXXFLAGS = -Wall -O3 -std=c++17 -ggdb3 -fno-omit-frame-pointer -flto -fgraphite
 
 #location of files and libraries to be used
 OSRM_DIR = ../osrm-backend/
@@ -11,7 +11,7 @@ SRCDIR = src/
 INCDIR = include/
 
 INCLUDES = -I$(OSRM_DIR)include/ -I$(OSRM_DIR)third_party/variant/include/ #-I$(GDAL_DIR)
-LIBS = -losrm -lm -lpthread -lrt -lboost_filesystem -lboost_iostreams -lboost_program_options -lboost_system -lboost_thread #-lgdal
+LIBS = -flto -losrm -lm -lpthread -lrt -lboost_filesystem -lboost_iostreams -lboost_program_options -lboost_system -lboost_thread #-lgdal
 LIBDIR = -L$(OSRM_DIR)lib -L/usr/local/lib
 
 # define the C++ source files
