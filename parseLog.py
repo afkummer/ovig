@@ -33,6 +33,11 @@ if __name__ == "__main__":
             if tks[0] == '*':
                tks = tks[1:]
             data.append(tks)
+         if "Unused vehicle list:" in line:
+            with open("unused.csv", "a+") as f2:
+               if f2.tell() == 0:
+                  f2.write("instance,seed,unused.vehi\n")
+               f2.write(instance + "," + str(seed) + "," + tks[-4] + "\n")
 
    with open("results.csv", "a+") as fid:
       if fid.tell() == 0:
