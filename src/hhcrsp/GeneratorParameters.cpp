@@ -92,7 +92,3 @@ int GeneratorParameters::minSeparation() const {
 int GeneratorParameters::maxSeparation() const {
    return 60;
 }
-
-int GeneratorParameters::minDynamicTwDurationMinutes() const {
-   return 10;
-}

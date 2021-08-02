@@ -50,7 +50,6 @@ struct Configurations{
    double ds_simult_perc;
    double ds_prec_perc;
    std::tuple <int, int> delta_range;
-   int min_ds_dyntw_duration;
 
 	//read the specification area of the input stream
     static FileCode read_configurations(struct Configurations& con, std::istream& f);

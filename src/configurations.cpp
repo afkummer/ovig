@@ -6,7 +6,7 @@
 typedef struct {
 	bool name=false, type=false, size=false, dist=false, clusters=false, density=false, route_time=false, capacity=false, depot=false, time_window=false, service=false, osrm=false, land=false, limits=false, nodes=false,
 
-   caregivers=false, skills=false, days=false, patients_override=false, max_carer_skills=false, min_patients_per_unit_skill=false, max_patients_per_unit_skill=false, day_start=false, day_end=false, min_svc_time=false, max_svc_time=false, ds_simult=false, ds_prec=false, min_delta=false, max_delta=false, ds_dyntw=false, ndaily=false;
+   caregivers=false, skills=false, days=false, patients_override=false, max_carer_skills=false, min_patients_per_unit_skill=false, max_patients_per_unit_skill=false, day_start=false, day_end=false, min_svc_time=false, max_svc_time=false, ds_simult=false, ds_prec=false, min_delta=false, max_delta=false, ndaily=false;
 }checker_t;
 
 bool has_everything(const checker_t& ch, const Configurations& con);
@@ -300,8 +300,6 @@ FileCode Configurations::read_configurations(struct Configurations& con, std::is
          f >> std::get<0>(con.delta_range); ch.min_delta = true;
       }else if(keyword == Constants::STR_CON_MAX_DELTA_SEP) {
          f >> std::get<1>(con.delta_range); ch.max_delta = true;
-      }else if(keyword == Constants::STR_CON_MIN_DYNTW_DURATION_MINUTES) {
-         f >> con.min_ds_dyntw_duration; ch.ds_dyntw = true;
       } else if(keyword == Constants::STR_CON_PATIENTS_DAILY) {
          f >> con.ndaily; ch.ndaily = true;
       }
@@ -424,10 +422,6 @@ bool has_everything(const checker_t& ch, const Configurations& con){
    }
    else if(not ch.max_delta) {
       misst = Constants::STR_CON_MAX_DELTA_SEP;
-      required = true;
-   }
-   else if(not ch.ds_dyntw) {
-      misst = Constants::STR_CON_MIN_DYNTW_DURATION_MINUTES;
       required = true;
    }
    else if(not ch.ndaily) {

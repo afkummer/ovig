@@ -63,7 +63,6 @@ namespace Constants{
    const std::string STR_CON_DS_PREC = "DS-PREC";
    const std::string STR_CON_MIN_DELTA_SEP = "MIN-DELTA";
    const std::string STR_CON_MAX_DELTA_SEP = "MAX-DELTA";
-   const std::string STR_CON_MIN_DYNTW_DURATION_MINUTES = "MIN-PREC-DYNTW";
    const std::string STR_CON_PATIENTS_DAILY = "DAILY-PATIENTS";
 
    const std::string STR_EOF = "EOF";
