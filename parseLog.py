@@ -42,7 +42,7 @@ if __name__ == "__main__":
    with open("results.csv", "a+") as fid:
       if fid.tell() == 0:
          fid.write("instance,seed,generation,remaining,cost.local,el.diver,no.impr,cost,dist,tard,tmax,time,op.flags,op.pr,op.xe,op.rst\n")
-      for row in data:
+      for row in [data[-1]]:
          fid.write(instance + "," + str(seed) + ",")
          fid.write(','.join(row))
          if 'P' not in row[-1] and 'X' not in row[-1] and 'R' not in row[-1]:
