@@ -17,48 +17,55 @@ if [ $# -eq 2 ]; then
    seed=$2
 fi
 
-$SOLVER_PATH \
-   --popsize 599 \
-   --gens 636 \
-   --pe 0.33384 \
-   --pm 0.0805 \
-   --mp 15 \
-   --ep 11 \
-   --bp linear \
-   --npop 2 \
-   --npairs 1 \
-   --mindist 0.60391 \
-   --psel best \
-   --pperc 0.01808 \
-   --ptype permutation \
-   --pperiod 68 \
-   --reset 52 \
-   --xelite 8 \
-   --immigrants 2 -i $inst -s $seed
-
 # $SOLVER_PATH \
-#    --popsize 205 \
-#    --gens 448 \
-#    --pe 0.31835 \
-#    --pm 0.06329 \
-#    --mp 3 \
-#    --ep  2 \
-#    --bp constant \
-#    --npop 1 \
+#    --popsize 599 \
+#    --gens 636 \
+#    --pe 0.33384 \
+#    --pm 0.0805 \
+#    --mp 15 \
+#    --ep 11 \
+#    --bp linear \
+#    --npop 2 \
 #    --npairs 1 \
-#    --mindist 0.4429 \
+#    --mindist 0.60391 \
 #    --psel best \
-#    --pperc 0.58126 \
+#    --pperc 0.01808 \
 #    --ptype permutation \
-#    --pperiod 96 \
-#    --reset 68 \
-#    --xelite 22 \
-#    --immigrants 8\
-#    -i $inst \
-#    -s $seed
+#    --pperiod 68 \
+#    --reset 52 \
+#    --xelite 8 \
+#    --immigrants 2 -i $inst -s $seed
+
+# -gens 700
+$SOLVER_PATH \
+   --popsize 205 \
+   --gens 448 \
+   --pe 0.31835 \
+   --pm 0.06329 \
+   --mp 3 \
+   --ep  2 \
+   --bp constant \
+   --npop 1 \
+   --npairs 1 \
+   --mindist 0.4429 \
+   --psel best \
+   --pperc 0.58126 \
+   --ptype permutation \
+   --pperiod 96 \
+   --reset 68 \
+   --xelite 22 \
+   --immigrants 8\
+   -i $inst \
+   -s $seed &
 
 if [ $? -ne 0 ]; then
    echo $1 >> problematic.txt
+   exit 1
 fi
 
+/home/alberto/work/doct-ufrgs-thesis/mankowska2014/build/exactMip $inst 999999 4 0 2>&1 > /dev/null
+
+fg
+
 exit $?
+
