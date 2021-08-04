@@ -65,9 +65,13 @@ void WeeklyData::generateDailyData() {
 
 FileCode WeeklyData::writeDailyData(int day) const {
    // Prepare the file handler.
+   #if 0
    char fidName[128];
    snprintf(fidName, sizeof fidName, "daily_%d.txt", day);
    ofstream fid(fidName);
+   #else
+   ofstream fid(m_params.outFileName());
+   #endif
    if (!fid) return FileCode::WriteError;
 
    // Write the headers
@@ -196,9 +200,7 @@ FileCode WeeklyData::writeDailyData(int day) const {
    }
    fid << "99999\n";
 
-
-   // cout << "Instance of day " << day << " exported sucessfully.\n";
-   cout << "File written: " << fidName << ".\n";
+   // cout << "File written: " << fidName << ".\n";
 
    return FileCode::WriteOk;
 }
@@ -368,12 +370,12 @@ void WeeklyData::generateDailyData(int day) {
    generateTimeWindows();
 
    vector <int> pertSkillAvail;
-   uniform_int_distribution <int> pertAvail(0, 3);
+   uniform_int_distribution <int> pertAvail(0, 2);
    {
       int sid = 0;
       for (int s: m_carerPerSkill) {
          pertSkillAvail.push_back(s+pertAvail(m_params.prng()));
-         cout << "Skill = " << sid << " cgAvail=" << s << " perturbed=" << 
+         cout << "Skill = " << sid << " cgAvail=" << s << " perturbed=" <<
             pertSkillAvail.back() << "\n";
          ++sid;
       }

@@ -28,6 +28,8 @@ public:
       return conf.ndaily ;
    }
 
+   inline std::string &outFileName() { return conf.iname; }
+
    int numSkills() const { return conf.nskills; }
 
    bool poolSizeOverride() const { return conf.patients_override; }
