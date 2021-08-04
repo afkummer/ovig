@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# To prevent concurrency while writing logs and CSV files, we use mktemp.
+mkdir solverlog 2>&1 > /dev/null
+logGa="$(mktemp -p solverlog logGa.XXXXXXXX)"
+logLp="$(mktemp -p solverlog logLp.XXXXXXXX)"
+
 # Precisa ajustar conforme o caminho que está compilado
 # o código da heurística.
 SOLVER_PATH=/home/alberto/work/itor-2021-brkga-mp-ipr-hhcrsp/build/brkga
@@ -56,16 +61,18 @@ $SOLVER_PATH \
    --xelite 22 \
    --immigrants 8\
    -i $inst \
-   -s $seed &
+   -s $seed | tee $logGa &
 
 if [ $? -ne 0 ]; then
    echo $1 >> problematic.txt
    exit 1
 fi
 
-/home/alberto/work/doct-ufrgs-thesis/mankowska2014/build/exactMip $inst 999999 4 0 2>&1 > /dev/null
+/home/alberto/work/doct-ufrgs-thesis/mankowska2014/build/exactMip $inst 999999 4 0 | tee $logLp
 
+echo "Waiting for everything to finish."
 fg
+echo "The waiting ended."
 
 exit $?
 
