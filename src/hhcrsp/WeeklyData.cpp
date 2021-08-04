@@ -65,9 +65,13 @@ void WeeklyData::generateDailyData() {
 
 FileCode WeeklyData::writeDailyData(int day) const {
    // Prepare the file handler.
+   #if 0
    char fidName[128];
    snprintf(fidName, sizeof fidName, "daily_%d.txt", day);
    ofstream fid(fidName);
+   #else
+   ofstream fid(m_params.outFileName());
+   #endif
    if (!fid) return FileCode::WriteError;
 
    // Write the headers
@@ -196,9 +200,7 @@ FileCode WeeklyData::writeDailyData(int day) const {
    }
    fid << "99999\n";
 
-
-   // cout << "Instance of day " << day << " exported sucessfully.\n";
-   cout << "File written: " << fidName << ".\n";
+   // cout << "File written: " << fidName << ".\n";
 
    return FileCode::WriteOk;
 }
@@ -367,9 +369,21 @@ void WeeklyData::generateDailyData(int day) {
    };
    generateTimeWindows();
 
+   vector <int> pertSkillAvail;
+   uniform_int_distribution <int> pertAvail(0, 2);
+   {
+      int sid = 0;
+      for (int s: m_carerPerSkill) {
+         pertSkillAvail.push_back(s+pertAvail(m_params.prng()));
+         cout << "Skill = " << sid << " cgAvail=" << s << " perturbed=" <<
+            pertSkillAvail.back() << "\n";
+         ++sid;
+      }
+   }
+
    // Used to generate demands proportionally to the number
    // of caregivers qualified to each each skill.
-   discrete_distribution <int> demandDist(m_carerPerSkill.begin(), m_carerPerSkill.end());
+   discrete_distribution <int> demandDist(pertSkillAvail.begin(), pertSkillAvail.end());
    uniform_int_distribution <int> procTimeDist(m_params.minProcTime(), m_params.maxProcTime());
 
    // Caches the last required skill set to the patient.
@@ -420,12 +434,10 @@ void WeeklyData::generateDailyData(int day) {
 
          if (sepMax != 0) {
             int a = 0, b = 0;
-            do {
-               int v1 = sepDist(m_params.prng());
-               int v2 = sepDist(m_params.prng());
-               a = min(v1, v2);
-               b = max(v1, v2);
-            } while (b - a < m_params.minDynamicTwDurationMinutes());
+            int v1 = sepDist(m_params.prng());
+            int v2 = sepDist(m_params.prng());
+            a = min(v1, v2);
+            b = max(v1, v2);
             m_separationTimes[i][day] = {a, b};
 
          } else {

@@ -28,6 +28,8 @@ public:
       return conf.ndaily ;
    }
 
+   inline std::string &outFileName() { return conf.iname; }
+
    int numSkills() const { return conf.nskills; }
 
    bool poolSizeOverride() const { return conf.patients_override; }
@@ -50,7 +52,6 @@ public:
 
    int minSeparation() const { return std::get<0>(conf.delta_range); }
    int maxSeparation() const { return std::get<1>(conf.delta_range); }
-   int minDynamicTwDurationMinutes() const { return conf.min_ds_dyntw_duration; }
 
 private:
    Configurations &conf;

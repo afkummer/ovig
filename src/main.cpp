@@ -30,10 +30,10 @@ int main(int argc, char** argv){
    Instance inst;
    auto hhc_params = GeneratorParameters(con);
    if(con.type == InstanceType::HHCP) {
-      if (con.nclusters != 1) {
-         printf("ERROR: Number of clusters must be 1 in HHCP.\n");
-         return EXIT_FAILURE;
-      }
+      // if (con.nclusters != 1) {
+      //    printf("ERROR: Number of clusters must be 1 in HHCP.\n");
+      //    return EXIT_FAILURE;
+      // }
       if (con.verbose >= 1) printf("Generating initial data for the HHCP.\n");
       inst.hhcp_data.reset(new WeeklyData(hhc_params));
       size_t size = inst.hhcp_data->generateInitialData();
