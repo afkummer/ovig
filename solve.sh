@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# To prevent concurrency while writing logs and CSV files, we use mktemp.
-mkdir solverlog 2>&1 > /dev/null
-logGa="$(mktemp -p solverlog logGa.XXXXXXXX)"
-logLp="$(mktemp -p solverlog logLp.XXXXXXXX)"
-
 # Precisa ajustar conforme o caminho que está compilado
 # o código da heurística.
 SOLVER_PATH=/home/alberto/work/itor-2021-brkga-mp-ipr-hhcrsp/build/brkga
@@ -17,6 +12,16 @@ fi
 
 inst=$1
 seed=1
+
+# To prevent concurrency while writing logs and CSV files, we first store 
+# all outputs, and then use a parse script to extract the important data 
+# from the outputs.
+mkdir solverlog 2>&1 > /dev/null
+
+bn="$(basename $inst .txt)"
+logGa="$(mktemp -p solverlog logGa.$bn.$seed.XXXXXXXX.log)"
+logLp="$(mktemp -p solverlog logLp.$bn.$seed.XXXXXXXX.log)"
+
 
 if [ $# -eq 2 ]; then
    seed=$2
