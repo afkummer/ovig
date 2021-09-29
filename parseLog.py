@@ -34,16 +34,23 @@ if __name__ == "__main__":
                tks = tks[1:]
             data.append(tks)
          if "Unused vehicle list:" in line:
-            with open("unused.csv", "a+") as f2:
-               if f2.tell() == 0:
-                  f2.write("instance,seed,unused.vehi\n")
-               f2.write(instance + "," + str(seed) + "," + tks[-4] + "\n")
+            unused = tks[-4]
 
+   tks = [x.strip() for x in instance.split("_") if len(x.strip()) > 0]
+   nodes = tks[-6]
+   vehi = tks[-5]
+   iseed = tks[-4]
+   density = tks[-3]
+   dplace = tks[-2]
+   dist = tks[-1].split(".")[0]
+   
    with open("results.csv", "a+") as fid:
       if fid.tell() == 0:
-         fid.write("instance,seed,generation,remaining,cost.local,el.diver,no.impr,cost,dist,tard,tmax,time,op.flags,op.pr,op.xe,op.rst\n")
+         fid.write("instance,nodes,vehi,iseed,density,dplace,distrib,")
+         fid.write("seed,generation,remaining,cost.local,el.diver,no.impr,cost,dist,tard,tmax,time,op.flags,op.pr,op.xe,op.rst,unused.vehi\n")
       for row in [data[-1]]:
-         fid.write(instance + "," + str(seed) + ",")
+         fid.write(instance + "," + nodes + "," + vehi + "," + iseed + "," + density + "," + dplace + "," + dist + ",")
+         fid.write(str(seed) + ",")
          fid.write(','.join(row))
          if 'P' not in row[-1] and 'X' not in row[-1] and 'R' not in row[-1]:
             fid.write(",,0,0,0")
@@ -52,4 +59,6 @@ if __name__ == "__main__":
             fid.write("1," if 'P' in row[-1] else "0,")
             fid.write("1," if 'X' in row[-1] else "0,")
             fid.write("1" if 'R' in row[-1] else "0")
+         fid.write("," + unused)
          fid.write("\n")
+
