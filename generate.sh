@@ -44,17 +44,17 @@ esac
 
 # Prepare the scratch data to generate the instance profile.
 prof="$(mktemp -p .)"
-printf "Generating instance (seed=%s)...\n" $seed
+#printf "Generating instance (seed=%s)...\n" $seed
 dest="HHCRSP_${n}_${v}_${seed}_${dens}_${dplace_lbl}_${dist_lbl}.txt"
 
 # Create the profile usin GNU SED.
 sed "s/XXXX/${dest}/g; s/ZZZZ/${n}/g; s/YYYY/${v}/g; s/AAAA/$seed/g; s/BBBB/$dens/g; s/CCCC/$dist/g; s/DDDD/$dplace/g" template-sed.conf > $prof
 
 # Generates the instance
-./main -c $prof -s $seed
+./main -c $prof -s $seed > /dev/null
 
 # Moves the new instance to the destination dir.
-echo Moving data to new-instances/$dest
+#echo Moving data to new-instances/$dest
 mv $dest new-instances/$dest
 rm -rf $prof
 
@@ -63,4 +63,4 @@ if [[ ! -f "metad.csv" ]]; then
 fi
 echo "new-instances/${dest},${n},${v},${seed},${dplace_lbl},${dist_lbl},${dens}" >> "metad.csv"
 
-printf "\n\n\n"
+#printf "\n\n\n"
