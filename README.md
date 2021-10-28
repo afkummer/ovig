@@ -1,40 +1,14 @@
-# Open Source Vehicle Routing Instance Generator (OVIG)
+# Realistic instance generator for the Home Health Care Routing and Scheduling Problem (HHCRSP)
 
-The OVIG tool is used to generate Vehicle Routing Problem (VRP) instances based on realistic addresses and travel times. Originally it was used to generate instances for a variant of the VRP called Pickup and Delivery Problem with Time Windows (PDPTW) as part of the Masters' thesis entitled *The Pickup and Delivery Problem with Time Windows: Algorithms, Instances, and Solutions*.
-
-Despite its original intent, the project can be extended to accomodate other VRP variants, such as the *Capacitated Vehicle Routing Problem* (CVRP), the *Vehicle Routing Problem with Time Windows* (VRPTW), and the *Pickup and Delivery Problem* (PDP). Currently this is part of future work.
+This repository contains the source code for generating realistic instances for the home health care problem introduced by [Mankowska et al. (2014)](https://doi.org/10.1007/s10729-013-9243-1). The software uses the [OVIG tool](https://github.com/cssartori/ovig) as codebase, and allows generating instances based on realistic addresses and travel times.
 
 The project uses Open Street Maps (OSM) from [Geofabrik](http://download.geofabrik.de/) and the [Open Source Routing Machine](https://github.com/Project-OSRM/osrm-backend) (OSRM) tool to compute realistic travel times. Addresses are currently obtained from the [OpenAddresses](https://openaddresses.io/) database, but any data on geographic locations can be used to feed the OVIG tool as long as it is valid.
 
-## Code
+## Compiling the code
 
-The project is thought to be open source, so that anyone interested can contribute to its development, and ideally contribute to the large VRP community. It is developed in `C++` to easily integrate with the OSRM tool. However, the code is currently chaotic (at best!) and I still have to find the time to organize and comment things further.
-
-## Compiling
-
-So far, the code should compile once all required packages are installed. Other than the basic `C++` compiler (compatible with `C++14`), it is necessary to compile from source and install OSRM, which is easily done by following their guide for *Building from Source*. Once all these dependencies are installed, it is enough to run `make` from the OVIG folder.
+Compiling the project is somewhat a straightforward process for those who have been working in UNIX/Linux environments for a while. As this fork of the original repository only adds some particular changes to the OVIG source code, we suggest the user to follow OVIG's original instructions for building the project.
 
 ## Running
 
-To run the instance generator, one should have a *configuration* text file ready. Then, it is just necessary to call:
-
-```sh
-./main -c conf.txt
-```
-
-Assuming your configuration file is `conf.txt`. For other options, you may run
-
-```sh
-./main -h
-```
-
-# Configuration files
-
-To correctly generate an instance a *configuration file* is required, which contains the characteristics desired for the resulting instance. An example is available at `configurations/bar-n100-1.txt`, which may be used to generate an instance in Barcelona containing 100 locations (plus the depot).
-
-The `scripts` can generate the configuration files and the instances for the PDPTW that the tool was primarily developed for. More information about the instances can be found [here](https://github.com/cssartori/pdptw-instances)
-
-# Generating home health care instances
-
-The original implementation of `ovig` is used to generate data for CVRP, PDPTW, and VRPTW. This fork also includes support for generating home care instances using the infrastructures developed to these other problems. To generate a instance, most of instructions for the original implementation apply. Specifically to home care, we recommend using the script `generate.sh`. You may also be interested in tweaking the generation parameters of [template-sed.conf](template-sed.conf).
+Different than OVIG, we use a shell script as front-end to the OVIG main executable. To run this script, you need to change the [template-sed.conf](template-sed.conf) configuration file with the path to your copy of OSRM dataset in line `OSRM-FILE:`. After that, you can generate new instances though the [generate.sh](generate.sh) script.
 
